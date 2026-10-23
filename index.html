@@ -1,0 +1,523 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FindSafe | Report Matching System</title><style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0b1120;
+    color: #e5e7eb;
+}
+
+header {
+    background: #111c30;
+    padding: 22px 16px;
+    border-bottom: 1px solid #26364d;
+}
+
+header h1 {
+    font-size: 23px;
+    margin: 0 0 8px;
+}
+
+header p {
+    color: #9caec5;
+    margin: 0;
+    font-size: 13px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px 15px;
+}
+
+.badge {
+    display: inline-block;
+    background: #123b37;
+    color: #6ee7b7;
+    padding: 7px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.card, .panel {
+    background: #131e30;
+    border: 1px solid #26364d;
+    border-radius: 12px;
+    padding: 17px;
+}
+
+.card p {
+    color: #9caec5;
+    font-size: 12px;
+    margin: 0 0 10px;
+}
+
+.card h2 {
+    font-size: 27px;
+    margin: 0;
+    color: #6ee7b7;
+}
+
+.panel {
+    margin-bottom: 20px;
+}
+
+.panel h2 {
+    font-size: 18px;
+    margin: 0 0 16px;
+}
+
+label {
+    display: block;
+    margin: 13px 0 6px;
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 7px;
+    border: 1px solid #35465e;
+    background: #0b1120;
+    color: white;
+    font-size: 14px;
+}
+
+button {
+    padding: 12px;
+    border: none;
+    border-radius: 7px;
+    background: #10b981;
+    color: #06281e;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.primary-button {
+    width: 100%;
+    margin-top: 18px;
+}
+
+.secondary-button {
+    background: #243750;
+    color: white;
+}
+
+.search-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.search-row input {
+    min-width: 0;
+}
+
+.report {
+    padding: 14px;
+    background: #0b1120;
+    border: 1px solid #2b3a50;
+    border-radius: 9px;
+    margin-top: 12px;
+}
+
+.report h3 {
+    font-size: 15px;
+    margin: 0 0 9px;
+}
+
+.report p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #b7c5d8;
+    overflow-wrap: anywhere;
+}
+
+.tag {
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-size: 11px;
+    background: #1e3a5f;
+    color: #93c5fd;
+}
+
+.found-tag {
+    background: #3b2e16;
+    color: #fcd34d;
+}
+
+.match-result {
+    background: #102c2a;
+    border: 1px solid #23645a;
+    border-radius: 8px;
+    padding: 13px;
+    margin-top: 12px;
+}
+
+.notice {
+    font-size: 12px;
+    color: #9caec5;
+    line-height: 1.6;
+}
+
+footer {
+    text-align: center;
+    padding: 22px;
+    font-size: 12px;
+    color: #8494aa;
+}
+
+@media (min-width: 700px) {
+    .stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 15px;
+    }
+}
+</style></head><body><header>
+    <h1>🛡️ FindSafe</h1>
+    <p>Smart Missing Person Search & Matching System</p>
+</header><main class="container"><span class="badge">● EDUCATIONAL DEMO</span>
+
+<section class="stats">
+    <div class="card">
+        <p>Missing Reports</p>
+        <h2 id="missingCount">0</h2>
+    </div>
+
+    <div class="card">
+        <p>Found Reports</p>
+        <h2 id="foundCount">0</h2>
+    </div>
+
+    <div class="card">
+        <p>Potential Matches</p>
+        <h2 id="matchCount">0</h2>
+    </div>
+
+    <div class="card">
+        <p>Total Reports</p>
+        <h2 id="totalCount">0</h2>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>📝 Register a Report</h2>
+
+    <form id="reportForm">
+        <div class="form-grid">
+
+            <div>
+                <label for="reportType">Report Type</label>
+                <select id="reportType">
+                    <option value="missing">Missing Person</option>
+                    <option value="found">Found Person</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="personName">Demo Name / Alias</label>
+                <input id="personName" maxlength="60"
+                       placeholder="e.g. Demo Person A" required>
+            </div>
+
+            <div>
+                <label for="age">Approximate Age</label>
+                <input id="age" type="number"
+                       min="0" max="120" required>
+            </div>
+
+            <div>
+                <label for="location">General Location</label>
+                <input id="location" maxlength="80"
+                       placeholder="e.g. Area A" required>
+            </div>
+
+            <div>
+                <label for="clothing">Clothing Description</label>
+                <input id="clothing" maxlength="100"
+                       placeholder="e.g. Blue shirt" required>
+            </div>
+
+            <div>
+                <label for="reportStatus">Report Status</label>
+                <select id="reportStatus">
+                    <option value="Open">Open</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="Closed">Closed</option>
+                </select>
+            </div>
+
+        </div>
+
+        <button class="primary-button" type="submit">
+            + Add Demo Report
+        </button>
+    </form>
+
+    <p class="notice">
+        Use fictional data only. Do not enter real people's
+        names, photographs, contact details, or precise locations.
+    </p>
+</section>
+
+<section class="panel">
+    <h2>🔎 Potential Matches</h2>
+    <button class="primary-button" id="matchButton" type="button">
+        Compare Reports
+    </button>
+    <div id="matchResults">
+        <p class="notice">Add reports and compare them to see possible matches.</p>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>📋 Report Directory</h2>
+
+    <div class="search-row">
+        <input id="searchInput"
+               placeholder="Search by alias or location...">
+        <button type="button" class="secondary-button"
+                id="clearSearch">Clear</button>
+    </div>
+
+    <div id="reportList"></div>
+</section>
+
+<p class="notice">
+    This prototype ranks fictional records using basic attribute
+    similarity. A match score is not proof of identity. Results
+    require independent human verification.
+</p>
+
+</main><footer>
+    FindSafe | DSA Mini-Project | Educational Prototype
+</footer><script>
+const reports = [
+    {
+        id: 1,
+        type: "missing",
+        name: "Demo Person A",
+        age: 24,
+        location: "Area A",
+        clothing: "Blue shirt",
+        status: "Open"
+    },
+    {
+        id: 2,
+        type: "found",
+        name: "Demo Person B",
+        age: 25,
+        location: "Area A",
+        clothing: "Blue shirt",
+        status: "Open"
+    }
+];
+
+let nextId = 3;
+
+const form = document.getElementById("reportForm");
+const reportList = document.getElementById("reportList");
+const searchInput = document.getElementById("searchInput");
+const matchResults = document.getElementById("matchResults");
+
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const report = {
+        id: nextId++,
+        type: document.getElementById("reportType").value,
+        name: document.getElementById("personName").value.trim(),
+        age: Number(document.getElementById("age").value),
+        location: document.getElementById("location").value.trim(),
+        clothing: document.getElementById("clothing").value.trim(),
+        status: document.getElementById("reportStatus").value
+    };
+
+    reports.push(report);
+
+    form.reset();
+    renderReports();
+    updateStats();
+
+    matchResults.textContent =
+        "Report added. Select Compare Reports to refresh results.";
+});
+
+function renderReports() {
+    const query = searchInput.value.trim().toLowerCase();
+
+    reportList.replaceChildren();
+
+    const filtered = reports.filter(function(report) {
+        return (report.name + " " + report.location)
+            .toLowerCase().includes(query);
+    });
+
+    if (filtered.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "notice";
+        empty.textContent = "No matching reports found.";
+        reportList.appendChild(empty);
+        return;
+    }
+
+    filtered.forEach(function(report) {
+        const card = document.createElement("article");
+        card.className = "report";
+
+        const heading = document.createElement("h3");
+        heading.textContent = "Report #" + report.id + " — " + report.name;
+
+        const tag = document.createElement("span");
+        tag.className = report.type === "missing"
+            ? "tag" : "tag found-tag";
+        tag.textContent = report.type === "missing"
+            ? "MISSING REPORT" : "FOUND REPORT";
+
+        const details = document.createElement("p");
+        details.textContent =
+            "Age: " + report.age +
+            " | Location: " + report.location +
+            " | Clothing: " + report.clothing +
+            " | Status: " + report.status;
+
+        card.append(heading, tag, details);
+        reportList.appendChild(card);
+    });
+}
+
+function updateStats() {
+    const missing = reports.filter(function(report) {
+        return report.type === "missing";
+    }).length;
+
+    const found = reports.filter(function(report) {
+        return report.type === "found";
+    }).length;
+
+    document.getElementById("missingCount").textContent = missing;
+    document.getElementById("foundCount").textContent = found;
+    document.getElementById("totalCount").textContent = reports.length;
+}
+
+function compareReports() {
+    const missing = reports.filter(function(report) {
+        return report.type === "missing" && report.status === "Open";
+    });
+
+    const found = reports.filter(function(report) {
+        return report.type === "found" && report.status === "Open";
+    });
+
+    const matches = [];
+
+    missing.forEach(function(m) {
+        found.forEach(function(f) {
+            let score = 0;
+
+            if (Math.abs(m.age - f.age) <= 3) {
+                score += 40;
+            }
+
+            if (m.location.toLowerCase() === f.location.toLowerCase()) {
+                score += 30;
+            }
+
+            if (m.clothing.toLowerCase() === f.clothing.toLowerCase()) {
+                score += 30;
+            }
+
+            if (score >= 60) {
+                matches.push({
+                    missingId: m.id,
+                    foundId: f.id,
+                    score: score
+                });
+            }
+        });
+    });
+
+    matches.sort(function(a, b) {
+        return b.score - a.score;
+    });
+
+    document.getElementById("matchCount").textContent = matches.length;
+    matchResults.replaceChildren();
+
+    if (matches.length === 0) {
+        const message = document.createElement("p");
+        message.className = "notice";
+        message.textContent =
+            "No candidates meet the demonstration threshold.";
+        matchResults.appendChild(message);
+        return;
+    }
+
+    matches.forEach(function(match) {
+        const m = reports.find(function(r) {
+            return r.id === match.missingId;
+        });
+
+        const f = reports.find(function(r) {
+            return r.id === match.foundId;
+        });
+
+        const card = document.createElement("div");
+        card.className = "match-result";
+
+        const heading = document.createElement("h3");
+        heading.textContent = "Candidate Pair — " + match.score + "%";
+
+        const details = document.createElement("p");
+        details.textContent =
+            m.name + " (missing report) ↔ " +
+            f.name + " (found report)";
+
+        const note = document.createElement("p");
+        note.className = "notice";
+        note.textContent =
+            "Demonstration score only. Similarity does not confirm identity.";
+
+        card.append(heading, details, note);
+        matchResults.appendChild(card);
+    });
+}
+
+document.getElementById("matchButton").addEventListener(
+    "click", compareReports
+);
+
+searchInput.addEventListener("input", renderReports);
+
+document.getElementById("clearSearch").addEventListener("click", function() {
+    searchInput.value = "";
+    renderReports();
+});
+
+renderReports();
+updateStats();
+</script></body>
+</html>
